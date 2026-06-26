@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { useScrollAnimation } from './hooks/useScrollAnimation';
 
 export default function Contact() {
   const leftRef = useScrollAnimation(0.2);

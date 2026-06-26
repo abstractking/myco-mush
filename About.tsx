@@ -1,4 +1,4 @@
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { useScrollAnimation } from './hooks/useScrollAnimation';
 
 export default function About() {
   const leftRef = useScrollAnimation(0.2);
