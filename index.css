@@ -1,0 +1,243 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.625rem;
+
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+
+    --color-violet: #240046;
+    --color-lavender: #C8B6FF;
+    --color-cream: #FFF8E7;
+    --color-orange: #E85D04;
+    --color-periwinkle: #B8C0FF;
+    --color-mushroom-red: #E63946;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: #FFFFFF;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+}
+
+/* Liquid Rainbow Drip */
+.drip-strip {
+  display: block;
+  width: 100%;
+  height: 60px;
+  overflow: visible;
+}
+
+.drip-stroke {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 14;
+  stroke-dasharray: 0 30;
+  transform-origin: top center;
+  transform: scaleY(0);
+  animation: drip-extend 3s ease-in-out infinite alternate;
+}
+
+.drip-segment {
+  fill: none;
+  stroke-width: 14;
+  stroke-dasharray: 20 10;
+}
+
+@keyframes drip-extend {
+  0% {
+    stroke-dashoffset: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    stroke-dashoffset: -15;
+    transform: scaleY(1);
+  }
+}
+
+/* Portal Vortex */
+.portal-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-rings {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.portal-ring {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  margin-left: -10px;
+  margin-top: -10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@keyframes portal-expand {
+  0% {
+    transform: scale(0);
+    opacity: var(--portal-opacity, 1);
+  }
+  50% {
+    opacity: var(--portal-opacity, 1);
+  }
+  100% {
+    transform: scale(var(--portal-scale, 5));
+    opacity: 0;
+  }
+}
+
+/* Drip border button */
+.drip-border-btn {
+  clip-path: url(#btn-clip-base);
+  transition: clip-path 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: visible;
+}
+
+.drip-border-btn:hover {
+  clip-path: url(#btn-clip-drip);
+}
+
+/* Magnetic button */
+.magnetic-btn {
+  position: relative;
+  transition: background-color 0.3s, color 0.3s;
+  will-change: transform;
+}
+
+.magnetic-btn span {
+  display: inline-block;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* Focus visible */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* Scroll animation base */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Directional variants for two-column layouts (About, Contact). Defined
+   here — not as inline styles — so .is-visible can still override the
+   transform via the normal CSS cascade. An inline `style` transform would
+   always win over these classes regardless of `is-visible`, leaving the
+   column permanently offset (and clipped on narrow viewports). */
+.animate-on-scroll-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-on-scroll-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.animate-on-scroll-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-on-scroll-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Below this width a horizontal slide risks pushing text past the
+   viewport edge before it reveals; fall back to the vertical variant. */
+@media (max-width: 640px) {
+  .animate-on-scroll-left,
+  .animate-on-scroll-right {
+    transform: translateY(30px);
+  }
+  .animate-on-scroll-left.is-visible,
+  .animate-on-scroll-right.is-visible {
+    transform: translateY(0);
+  }
+}
+
+/* Entrance animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
