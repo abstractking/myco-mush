@@ -114,12 +114,38 @@ export default function GridPlane() {
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
+    // --- Sun-eye emblem: floats above the grid, glows with time + scroll ---
+    const textureLoader = new THREE.TextureLoader();
+    const sunTexture = textureLoader.load('/textures/sun-eye.png');
+    sunTexture.colorSpace = THREE.SRGBColorSpace;
+
+    const sunGeometry = new THREE.PlaneGeometry(9, 9);
+    const sunMaterial = new THREE.MeshBasicMaterial({
+      map: sunTexture,
+      transparent: true,
+      depthWrite: false,
+      toneMapped: false,
+    });
+
+    const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+    sunMesh.position.set(0, 5.5, -6); // centered above the horizon line
+    scene.add(sunMesh);
+
     let animId = 0;
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
-      material.uniforms.time.value = clock.getElapsedTime();
+      const t = clock.getElapsedTime();
+      material.uniforms.time.value = t;
       material.uniforms.scroll.value = scrollRef.value;
+
+      // Subtle breathing glow + drift, reacting to time and scroll
+      const pulse = 1 + Math.sin(t * 0.6) * 0.06;
+      sunMesh.scale.setScalar(pulse);
+      sunMesh.rotation.z = Math.sin(t * 0.15) * 0.04;
+      sunMesh.position.y = 5.5 + Math.sin(t * 0.4) * 0.25 - scrollRef.value * 2.5;
+      sunMaterial.opacity = 0.85 + Math.sin(t * 0.6) * 0.15;
+
       renderer.render(scene, camera);
     };
 
@@ -146,6 +172,9 @@ export default function GridPlane() {
       window.removeEventListener('resize', handleResize);
       geometry.dispose();
       material.dispose();
+      sunGeometry.dispose();
+      sunMaterial.dispose();
+      sunTexture.dispose();
       renderer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
