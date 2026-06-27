@@ -116,7 +116,7 @@ export default function GridPlane() {
 
     // --- Sun-eye emblem: floats above the grid, glows with time + scroll ---
     const textureLoader = new THREE.TextureLoader();
-    const sunTexture = textureLoader.load('/textures/sun-eye.png');
+    const sunTexture = textureLoader.load('/texture/sun-eye.png');
     sunTexture.colorSpace = THREE.SRGBColorSpace;
 
     const sunGeometry = new THREE.PlaneGeometry(9, 9);
